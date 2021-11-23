@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>
+        Flask #2
+    </title>
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
+
+
+<body style="font-family:arial, sans-serif">
+    <h1>{{header}}</h1>
+    <h2><a href="/chart2"> Initializer </a></h2>
+  
+    <div>
+        <p>" Select the group "</p>
+    </div>      
+    
+      
+      <!--group selection -->
+    <div id = groupselect >
+      <form method="post" action="/groupselection" >
+      <div id="mainselection">
+        <select name="group">
+          <option selected>Select an the group</option>
+          {% for group in groups %}
+          <option value="{{group}}">{{group}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit"> group select </button>
+      </form>
+    </div>
+
+    <div>
+        <p>" Select the year "</p>
+
+    </div>
+
+    <div id = yearselect >
+      <!--year selection -->
+      <form method="post" action="/yearselection" >
+          <div id="yearselection">
+            <select name="year">
+              <option selected>Select the year</option>
+              {% for year in years %}
+              <option value="{{year}}">{{year}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit"> year select </button>
+          <!--<button class="button execute" name="submit" value="submit">Submit</button>-->
+      </form>
+    </div>
+  
+    <div>
+        <p>" Select the month "</p>
+
+    </div>
+
+    <div id = monthselect >
+      <!--month selection -->
+      <form method="post" action="/monthselection" >
+          <div id="monthselection">
+            <select name="month">
+              <option selected>Select the month</option>
+              {% for month in months %}
+              <option value="{{month}}">{{month}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit"> month select </button>
+          <!--<button class="button execute" name="submit" value="submit">Submit</button>-->
+      </form>
+    </div>
+  
+
+    <div id="chart" class="chart"></div>
+
+</body>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script type="text/javascript">
+    var graphs = {{graphJSON | safe}};
+    Plotly.plot('chart',graphs,{});        
+</script>

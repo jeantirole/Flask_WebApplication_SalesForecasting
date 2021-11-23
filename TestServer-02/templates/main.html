@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>
+        Flask #2
+    </title>
+</head>
+<body>
+    <form method="POST" action="/calculate">
+        <h1> Flask #2_데이터 입력받기 </h1>
+        <h3> 사용자가 원하는 구구단을 출력하자!</br></h3>
+        <h5> 출력하고자 하는 구구단을 입력하세요.</h5>
+        <input type="text" name="num">
+        <button type="submit">구구단 확인하기</button>
+    </form>
+    <div>
+        <p>this is script part</p>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script type="text/javascript">
+            var graphs = {{graphJSON | safe}};
+            Plotly.plot('chart',graphs,{});        
+        </script>
+    </div>
+    <div>
+        <label for="dog-names">Choose a dog name:</label>
+        <select name="dog-names" id="dog-names">
+        <option value="rigatoni">Rigatoni</option>
+        <option value="dave">Dave</option>
+        <option value="pumpernickel">Pumpernickel</option>
+        <option value="reeses">Reeses</option>
+        </select>   
+    </div>
+    <div>
+        <form method="post" action="/switchinfo" >
+            <div id="mainselection">
+              <select name="site">
+                <option selected>Select an the site</option>
+                {% for site in sites %}
+                <option value="{{site}}">{{site}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit"> selection 변수 제공 </button>
+            <!--<button class="button execute" name="submit" value="submit">Submit</button>-->
+        </form>
+    </div>
+    <div>
+        <p>check the site</p>
+        <p>{{site}}</p>
+        <p>{{sites}}</p>
+    </div>
+    <div>
+        <p> 
+            {% if group == None %}
+                <h5> 그룹입력 없음</h5>
+            {% else %}
+                <h5> 객체는 있으나 비어있음</h5>
+                {{group}}
+            {% endif %}
+        </p>
+    </div>
+    <div>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script type="text/javascript">
+            var graphs = {{graphJSON | safe}};
+            Plotly.plot('chart',graphs,{});        
+        </script>
+    </div>
+
+</body>
+</html>

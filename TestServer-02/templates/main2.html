@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <title>
+        Flask #2
+    </title>
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+<body style="font-family:arial, sans-serif">
+    <!--<h1 id = head1>{{header}}</h1>-->
+    <!--<h2><a href="/chart2"> Initializer </a></h2>-->
+    <h1 id = head1>Cash Flow Management</h1>
+
+    <div id = datainfo> 
+      <h3>DATA INFO : </h3>
+      <p>data columns : {{ info01 }} </p>
+      <p>start day : {{start_day  }}</p>
+      <p>last day : {{last_day  }}</p>
+      <p>categorical value 1 : {{category_val_01  }}</p>
+      <p>categorical value 2 : {{category_val_02  }}</p>
+
+    </div>
+
+
+    <div id = timeselectionhead>
+      <h3>Display the period : </h3>
+    </div>
+
+    
+  <div id = yearselect >
+    <!--year selection -->
+    <form method="post" action="/yearselection" >
+        <select name="year">
+          <option selected>Select the year</option>
+          {% for year in years %}
+          <option value="{{year}}">{{year}}</option>
+          {% endfor %}
+        </select>
+      <button type="submit"> year select </button>
+    </form>
+  </div>
+  
+  <!--month selection -->
+  <div id = monthselect >
+    <form method="post" action="/monthselection" >
+        <select name="month">
+          <option selected>Select the month</option>
+          {% for month in months %}
+          <option value="{{month}}">{{month}}</option>
+          {% endfor %}
+        </select>
+      <button type="submit"> month select </button>
+    </form>
+  </div>
+  
+  <!--chart !!!!!! -->
+  <div id="chart" class="chart"></div>
+
+
+  <div id = groupselectionhead>
+    <h3>Select the group : </h3>
+  </div>
+  <div id="content">
+    <h3>Enter the period(days) you want to forecast :</h3>
+    <p>
+    <form method= "get" action="/train" >
+       <input type="text" name="anything" placeholder="forecasting period">
+       <input type="submit" name="anything_submit" value="Submit" onclick="loading();">
+    </form>
+    </p>
+ </div>
+
+  <!--group selection -->
+  <div id = groupselect >
+    <form method="post" action="/groupselection" >
+      <select name="group">
+        <option selected>Select the group</option>
+        {% for group in groups %}
+        <option value="{{group}}">{{group}}</option>
+        {% endfor %}
+      </select>
+    <button type="submit"> group select </button>
+    </form>
+  </div>
+
+
+ <!--<div id="defaultimage" style="background-image: url(/static/Fuqo.gif); background-repeat: no-repeat; height: 50%; width: 100%;"></div>-->
+ <div id=defaultimage></div>
+ <!--<div id=imagetest ></div>-->
+ <div id="loading" ></div>
+ <div id="result" >
+     <!--<h3>Results:</h3>-->
+     <!--<img id = predictedchart >-->
+ </div>
+ <div id="chartprediction" class="chartprediction"></div>
+ <div id ="bottomline"></div>
+
+{% if display %}
+<script>
+ $("#result").show(); 
+ $("#defaultimage").hide();
+ 
+</script>    
+{% endif %}
+</body>
+
+<script type="text/javascript">
+    var graphs = {{graphJSON | safe}};
+    Plotly.plot('chart',graphs,{});        
+</script>
+
+<script type="text/javascript">
+  var graphs2 = {{display | safe}};
+  Plotly.plot('chartprediction',graphs2,{});        
+</script>
+
+<script type="text/javascript">// <![CDATA[
+  function loading(){
+      // alert('loading')
+      $("#loading").show();
+      // $("#content").hide();    
+      $("#result").hide(); 
+      $("#defaultimage").hide(); 
+  }
+</script>

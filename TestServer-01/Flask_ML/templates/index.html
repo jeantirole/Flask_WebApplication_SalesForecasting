@@ -1,0 +1,155 @@
+<html>
+<head>
+    <title>Flask</title>
+    <!-- <link rel="stylesheet" href="../static/index.css"> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body,h1,h2,h3,h4,h5 {font-family: 'Nanum Pen Script', cursive;}
+    </style>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+</head>
+
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+    <div class="w3-bar w3-black w3-card">
+      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+      <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    </div>
+</div>
+
+<!-- Header 영역-->
+<header class="w3-container w3-center w3-padding-32" style="background-color: bisque;"> 
+    <br><br>
+    <h1 class="w3-wide w3-center"><b>Predict Data</b></h1>
+    <p class="w3-opacity w3-center">machine learning, deep learning for <span class="w3-tag">PREDICT</span></p>
+</header>
+
+<!-- Content 영역-->
+<div div class="w3-container w3-content w3-padding-64" style="max-width:800px; min-height:500px;">
+{% if display == '기본' %}
+    <form action="/data" id="fileupload" enctype="multipart/form-data">
+        <h3 class="w3-wide">ADD DATA</h3>
+        <p class="w3-justify">데이터 예측을 위해서는 csv파일의 업로딩이 필요합니다. 기본 설정된 target은 "sales" 이며 칼럼에 "date"가 필수적으로 들어가 있어야 하고 그룹으로는 "store" 칼럼이 지정되어야합니다.</p>
+        <br><br>
+        <div class="w3-col m6 w3-large w3-margin-bottom">
+            <h4>Choose file to upload</h4>
+            <input type="file" id="file" name="file" multiple>
+        </div>
+        <div class="w3-col m6">
+            <br>
+            <input type="submit" value="데이터입력" class="w3-button w3-black w3-padding-large w3-margin-bottom"></button>
+        </div>
+    </form>
+{% endif %}
+
+{% if display != '기본' %}
+    <h2 class="w3-wide">DATA:</h2>
+    <p class="w3-justify">{{data_name}}</p><hr><br>
+    
+    <div id="content" class="w3-content" style="max-width:1400px">
+        <form id="customizing" action="/customizing" method="GET">
+            <div class="w3-row w3-padding-16">
+                <h5>
+                시작일 : <input type="date" name="startdate"> &nbsp;&nbsp;
+                종료일 : <input type="date" name="enddate">
+                </h5>
+            </div>
+
+            <div class="w3-row w3-padding-16">
+                <div class="w3-third">
+                    <p class="w3-opacity">데이터 범위(x축): </p>
+                    <select id="date_unit" name="date_unit">
+                        <option value="DATE" selected>날짜까지(기본)</option>
+                        <option value="MONTH">월까지</option>
+                        <option value="YEAR">년도만</option>
+                    </select>
+                </div>
+                <div class="w3-third">
+                    <p class="w3-opacity">데이터 그룹: </p>
+                    {% if group_name %}  
+                    <select id="grouping" name="grouping">
+                        <option value="All" selected>모든 그룹(기본)</option>
+                        {% for name in group_name %}
+                        <option value="{{name}}">{{name}}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
+                </div>
+                <div class="w3-third">
+                    <br>
+                    <input type="submit" onclick="loading();" value="GRAPH" class="w3-button w3-black w3-padding-large w3-margin-bottom">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="w3-row w3-padding-16">
+        <div id="defaultimage" style="background-image: url(/static/empty2.PNG); background-repeat: no-repeat; height: 100%; width: 80%; background-size: 100%;"></div>
+        <div id="loading" style="background-image: url(/static/shark.gif); background-repeat: no-repeat; height: 100%; width: 80%; background-size: 100%; display: none;"></div>
+        <div id="result" style="display: none; height: 100%; width: 80%;">
+            <div style="width:800px">
+                <div id='chart' class='chart'></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-row w3-padding-16"></div>
+        <form id="predict" action="/predict/LSTM">
+            <div class="w3-third">
+                <p class="w3-opacity">모델링(예측): </p>
+                <select id="model_name" name="model_name">
+                    <option value="LSTM" selected>LSTM (기본)</option>
+                    <option value="XGBoost">XGBoost</option>
+                    <option value="RandomForest">RandomForest</option>
+                </select>
+            </div>
+            <div class="w3-third">
+                <br>
+                <input type="submit" onclick="loading();" class="w3-button w3-black w3-padding-large w3-margin-bottom">
+            </div>
+        </form>
+    </div>
+{% endif %}
+</div>
+
+<script>
+    var graphs = {{graphJSON | safe}};
+    Plotly.plot('chart',graphs,{}); 
+</script>
+
+<script type="text/javascript">
+function loading(){
+    $("#loading").show();
+    $("#result").hide(); 
+    $("#defaultimage").hide(); 
+}
+</script>
+
+{% if graphJSON %}
+<script>
+    alert('실행이 완료되었습니다.');
+    $("#result").show(); 
+    $("#defaultimage").hide(); 
+</script>    
+{% endif %}
+
+
+
+<!-- Footer 영역 -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-grey w3-xlarge">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+    <p class="w3-medium">Powered by <a href="mailto:yunju.oh@kstec.co.kr" target="_blank">yunju.oh@kstec.co.kr</a></p>
+</footer>
+</body>
+</html>
