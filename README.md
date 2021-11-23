@@ -1,2 +1,2 @@
 # Flask_WebApplication_SalesForecasting
-Web Application Build for Sales Forecasting 
+플라스크 웹어플리케이션 현금흐름예측
