@@ -33,3 +33,10 @@ python main.py
 http://127.0.0.1:5000/chart2
 </code>
 </pre>
+
+### 사용방법
+Select the year : <button> 옵션
+Select the month : <button> 옵션
+Select the group : <button> 필수선택
+Enter the period(days) you want to forecast : <period> 기간입력 후 예측시작  
+
