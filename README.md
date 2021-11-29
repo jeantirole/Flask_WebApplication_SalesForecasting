@@ -9,4 +9,6 @@
 - Uploaded data 에 대한 코드 및 화면 재설계중 
 
 
-
+'''
+cd flask_folder_dir 
+'''
